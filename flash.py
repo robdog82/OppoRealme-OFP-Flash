@@ -481,6 +481,17 @@ def main():
                 iscopy = True
             xmlfiles.append((wfilename, start, length, rlength, checksums, decryptsize, iscopy))
     for child in root:
+           # Need to switch from fastboot to fastbootd here:
+    printc("\n\nWould you like to switch to fastbootd?")
+    printc("WARNING: Flashing critical can permanently brick your device!!!")
+    printc("1 - Reboot device to fastbootd")
+    printc("0 - continue")
+    fastbootd_choice = input("Choice: ")
+    fastbootd_choice = int("".join(filter(str.isdigit, fastbootd_choice)))
+
+    if fastbootd_choice == 1:
+        subprocess.check_output(["fastboot", "reboot", "fastboot"], stderr=subprocess.STDOUT)
+        printc("\n\nfastbootd should now be active.")
         for item in child:
             if child.tag != "ProgramList" or item.attrib["label"] not in partitions or item.attrib["filename"] == "":
                 continue
